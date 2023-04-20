@@ -8,7 +8,7 @@ import os
 # load the class label names from disk, one label per line
 # CLASS_NAMES = open("coco_labels.txt").read().strip().split("\n")
 
-CLASS_NAMES = ['BG', 'kangaroo']
+CLASS_NAMES = ['BG', 'salad','rice','chicken breast']
 
 class SimpleConfig(mrcnn.config.Config):
     # Give the configuration a recognizable name
@@ -28,11 +28,11 @@ model = mrcnn.model.MaskRCNN(mode="inference",
                              model_dir=os.getcwd())
 
 # Load the weights into the model.
-model.load_weights(filepath="Kangaro_mask_rcnn_trained.h5", 
+model.load_weights(filepath="C:/logdir/train/mask_rcnn_object_0012.h5", 
                    by_name=True)
 
 # load the input image, convert it from BGR to RGB channel
-image = cv2.imread("sample2.jpg")
+image = cv2.imread("grilled-chicken-breast-recipe-image-sq.jpg")
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
 # Perform a forward pass of the network to obtain the results
