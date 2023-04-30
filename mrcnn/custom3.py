@@ -167,8 +167,13 @@ class CustomDataset(utils.Dataset):
                         dtype=np.uint8)
         for i, p in enumerate(info["polygons"]):
             # Get indexes of pixels inside the polygon and set them to 1
-        	rr, cc = skimage.draw.polygon(p['all_points_y'], p['all_points_x'])
-        	mask[rr, cc, i] = 1
+            rr, cc = skimage.draw.polygon(p['all_points_y'], p['all_points_x'])
+            rr[rr>mask.shape[0]-1] = mask.shape[0]-1
+            cc[cc>mask.shape[0]-1] = mask.shape[0]-1
+            try:
+                mask[rr, cc, i] = 1
+            except IndexError:
+                print(f"Index {i} is out of range for mask shape {mask.shape}.")
 
         # Return mask, and array of class IDs of each instance. Since we have
         # one class ID only, we return an array of 1s
@@ -247,7 +252,7 @@ def train(model):
     print("Training network heads")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=30,
+                epochs=100,
                 layers='heads')
 				
 				
