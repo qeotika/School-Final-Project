@@ -52,13 +52,20 @@ r = model.detect([image], verbose=0)
 # Get the results for the first image.
 r = r[0]
 
+# Filter out instances with confidence score below 0.82
+high_conf_indices = np.where(r['scores'] >= 0.82)[0]
+filtered_boxes = r['rois'][high_conf_indices]
+filtered_masks = r['masks'][:, :, high_conf_indices]
+filtered_class_ids = r['class_ids'][high_conf_indices]
+filtered_scores = r['scores'][high_conf_indices]
+
 # Visualize the detected objects.
 mrcnn.visualize.display_instances(image=image, 
-                                  boxes=r['rois'], 
-                                  masks=r['masks'], 
-                                  class_ids=r['class_ids'], 
+                                  boxes=filtered_boxes, 
+                                  masks=filtered_masks, 
+                                  class_ids=filtered_class_ids, 
                                   class_names=CLASS_NAMES, 
-                                  scores=r['scores'])
+                                  scores=filtered_scores)
 
 #Get X,Y of first mask
 # Get the mask for the first object instance
