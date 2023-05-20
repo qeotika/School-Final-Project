@@ -1,14 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from skimage import measure
+#from skimage import measure
 from scipy import interpolate
 from scipy import ndimage
 
 # create two 2D masks
-mask_top = np.array([[1, 1, 0, 1], 
+mask_top = np.array([[1, 0, 0, 1], 
                      [1, 0, 0, 0], 
                      [1, 0, 0, 0], 
-                     [0, 0, 0, 0]])
+                     [1, 0, 0, 0]])
 
 mask_side = np.array([[1, 0, 0, 0], 
                       [1, 0, 0, 1], 
@@ -20,8 +20,8 @@ x = np.arange(mask_top.shape[0])
 y = np.arange(mask_top.shape[1])
 x_new = np.linspace(0, mask_top.shape[0]-1, 100)
 y_new = np.linspace(0, mask_top.shape[1]-1, 100)
-f_top = interpolate.interp2d(x, y, mask_top, kind='linear')
-f_side = interpolate.interp2d(x, y, mask_side, kind='linear')
+f_top = interpolate.interp2d(x, y, mask_top, kind='cubic')
+f_side = interpolate.interp2d(x, y, mask_side, kind='cubic')
 mask_top_interp = f_top(x_new, y_new)
 mask_side_interp = f_side(x_new, y_new)
 
