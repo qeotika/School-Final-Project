@@ -37,8 +37,9 @@ def calculate_longest_distance(mask):
 
     return max_distance, max_point_1, max_point_2
 
+#How many pixels per cm 
 def calculate_pixels_to_cm_ratio(mask_data,plate_width_cm,class_id):
-    inch_to_cm_ratio=2.54
+    # inch_to_cm_ratio=2.54
     class_masks = mask_data['masks'][:, :, 0]
     nonzero_indices = np.nonzero(class_masks)
     x_coords = nonzero_indices[1]
@@ -50,7 +51,7 @@ def calculate_pixels_to_cm_ratio(mask_data,plate_width_cm,class_id):
         print("No plate has been found")
         return None
     
-    mask = class_masks    
+    mask = class_masks  #The masks present   
     plate_width_pixels = calculate_longest_distance(mask)[0] #Take max_distance ONLY
     pixels_to_cm_ratio = plate_width_pixels/plate_width_cm #Ratio of pixels to CM
     return pixels_to_cm_ratio,plate_width_pixels #X Pixels = 1 CM

@@ -18,6 +18,8 @@ import multiprocessing
 import numpy as np
 import tensorflow as tf
 import keras
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, LSTM
 import keras.backend as K
 import keras.layers as KL
 import keras.engine as KE

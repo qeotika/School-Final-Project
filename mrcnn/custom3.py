@@ -67,7 +67,7 @@ class CustomDataset(utils.Dataset):
         # Train or validation dataset?
         assert subset in ["train", "val"]
         dataset_dir = os.path.join(dataset_dir, subset)
-
+#How the tagged data should look like:
         # Load annotations
         # VGG Image Annotator saves each image in the form:
         # { 'filename': '28503151_5b5b7ec140_b.jpg',
@@ -115,15 +115,9 @@ class CustomDataset(utils.Dataset):
               #      print(attribute)
                     
             polygons = [a['regions'][r]['shape_attributes'] for r in a['regions']] 
-            #print("***Polygons***")
-            #print(polygons)
             objects = [a['regions'][s]['region_attributes']['label'] for s in a['regions']]
-            #print("***Objects***")
-            #print(objects)
             print("objects:",objects)
-            #name_dict = {"laptop": 1,"tab": 2,"phone": 3}
             name_dict = {"salad": 1,"rice": 2,"chicken breast" : 3} #,"xyz": 3}
-            # key = tuple(name_dict)
             num_ids = [name_dict[a] for a in objects]
      
             # num_ids = [int(n['Event']) for n in objects]

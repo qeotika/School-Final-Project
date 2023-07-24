@@ -210,7 +210,7 @@ model = modellib.MaskRCNN(mode="training", config=config,
                                   model_dir=DEFAULT_LOGS_DIR)
 
 weights_path = COCO_WEIGHTS_PATH
-        # Download weights file
+        # Download weights file before using this.
 if not os.path.exists(weights_path):
   utils.download_trained_weights(weights_path)
 

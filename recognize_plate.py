@@ -9,7 +9,6 @@ import numpy as np
 import sys
 sys.path.append('C:\Programming PYTHON\MarkRcnn37Dig\Mask-RCNN-TF2\kangaroo-transfer-learning')
 from calculatepixelstocmratio import calculate_pixels_to_cm_ratio
-import math
 
 
 #Only use non-zero elements.
@@ -88,67 +87,58 @@ class SimpleConfig(mrcnn.config.Config):
 
 	# Number of classes = number of classes + 1 (+1 for the background). The background class is named BG
     NUM_CLASSES = len(CLASS_NAMES)
-
-# Initialize the Mask R-CNN model for inference and then load the weights.
-# This step builds the Keras model architecture.
-model = mrcnn.model.MaskRCNN(mode="inference", 
-                             config=SimpleConfig(),
-                             model_dir=os.getcwd())
-
-# Load the weights into the model.
-model.load_weights(filepath="C:/logdir/train/mask_rcnn_plateob_0082.h5", 
-                   by_name=True)
-
-# load the input image, convert it from BGR to RGB channel
-image = cv2.imread("C:/Users/romax/Downloads/emptyplate.jpeg")
-image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-
-
-# Perform a forward pass of the network to obtain the results
-r = model.detect([image], verbose=0)
-
-
-# Get the results for the first image.
-r = r[0]
-
-
-# Filter out instances with confidence score below 0.82
-high_conf_indices = np.where(r['scores'] >= 0.82)[0]
-filtered_boxes = r['rois'][high_conf_indices]
-filtered_masks = r['masks'][:, :, high_conf_indices]
-filtered_class_ids = r['class_ids'][high_conf_indices]
-filtered_scores = r['scores'][high_conf_indices]
-
-# Visualize the detected objects.
-mrcnn.visualize.display_instances(image=image, 
-                                  boxes=filtered_boxes, 
-                                  masks=filtered_masks, 
-                                  class_ids=filtered_class_ids, 
-                                  class_names=CLASS_NAMES, 
-                                  scores=filtered_scores)
-
-#Get X,Y of first mask
-# Get the mask for the first object instance
-
-#loop through dict to class_ids length(for each)
-mask = r['masks'][:, :, 0]
-
-# Find the indices where the mask values are non-zero
-nonzero_indices = np.nonzero(mask)
-
-# Extract the x and y coordinates
-x_coords = nonzero_indices[1]
-y_coords = nonzero_indices[0]
-
-pixel_to_cm_info = calculate_pixels_to_cm_ratio(r,27.5,1)#Mask,Plate_Width_Cm,PlateID
-pixel_to_cm_ratio = pixel_to_cm_info[0]
-pixel_width_plate = pixel_to_cm_info[1]
-
-print("Pixel to CM: :" ,pixel_to_cm_ratio)
-#longest_pixels_distance = calculate_longest_distance(mask)
-#print(longest_pixels_distance) #In Cm. [length in cm,max x, max y]
-print("your plate is ", pixel_width_plate/pixel_to_cm_ratio , " cm")
-print("your plate is ", pixel_width_plate , " pixels")
+def voxel_plate(picture):
+    # Initialize the Mask R-CNN model for inference and then load the weights.
+    # This step builds the Keras model architecture.
+    model = mrcnn.model.MaskRCNN(mode="inference", 
+                                 config=SimpleConfig(),
+                                 model_dir=os.getcwd())
+    
+    # Load the weights into the model.
+    model.load_weights(filepath="C:/logdir/train/mask_rcnn_plateob_0082.h5", 
+                       by_name=True)
+    
+    # load the input image, convert it from BGR to RGB channel
+    image = cv2.imread(picture)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    
+    
+    
+    # Perform a forward pass of the network to obtain the results
+    r = model.detect([image], verbose=0)
+    
+    
+    # Get the results for the first image.
+    r = r[0]
+    
+    
+    # Filter out instances with confidence score below 0.82
+    high_conf_indices = np.where(r['scores'] >= 0.89)[0]
+    filtered_boxes = r['rois'][high_conf_indices]
+    filtered_masks = r['masks'][:, :, high_conf_indices]
+    filtered_class_ids = r['class_ids'][high_conf_indices]
+    filtered_scores = r['scores'][high_conf_indices]
+    
+    # Visualize the detected objects.
+    mrcnn.visualize.display_instances(image=image, 
+                                      boxes=filtered_boxes, 
+                                      masks=filtered_masks, 
+                                      class_ids=filtered_class_ids, 
+                                      class_names=CLASS_NAMES, 
+                                      scores=filtered_scores)
+    
+    
+   
+    
+    pixel_to_cm_info = calculate_pixels_to_cm_ratio(r,43.4,1)#Mask,Plate_Width_Cm,PlateID
+    pixel_to_cm_ratio = pixel_to_cm_info[0]
+    pixel_width_plate = pixel_to_cm_info[1]
+    
+    print("Pixel to CM: :" ,pixel_to_cm_ratio)
+    #longest_pixels_distance = calculate_longest_distance(mask)
+    #print(longest_pixels_distance) #In Cm. [length in cm,max x, max y]
+    print("your plate is ", pixel_width_plate/pixel_to_cm_ratio , " cm")
+    print("your plate is ", pixel_width_plate , " pixels")
+    return pixel_to_cm_ratio
 
 

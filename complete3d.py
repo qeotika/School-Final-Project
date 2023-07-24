@@ -25,15 +25,15 @@ def create_3d_volume(top_mask, side_mask):
 
 
 # Example usage
-mask_top = np.array([[0, 0, 0, 0],
-                     [0, 0, 0, 1], #Right is the TOP RIGHT UPPER BUILD 
-                     [0, 0, 0, 0],
+mask_top = np.array([[1, 1, 1, 0],
+                     [1, 1, 1, 1], #Right is the TOP RIGHT UPPER BUILD 
+                     [0, 1, 0, 0],
                      [0, 0, 0, 0]])
 
-mask_side = np.array([[0, 0, 0, 1], #Right colum is the lower x,ys
-                      [0, 0, 0, 1],
-                      [0, 0, 0, 1],
-                      [0, 0, 0, 1]])
+mask_side = np.array([[0, 1, 1, 1], #Right colum is the lower x,ys
+                      [0, 1, 1, 1],
+                      [0, 0, 1, 1],
+                      [0, 1, 0, 1]])
 
 # Create the 3D object
 volume = create_3d_volume(mask_top, mask_side)
